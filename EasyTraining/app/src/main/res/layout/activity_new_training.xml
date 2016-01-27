@@ -1,0 +1,86 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" android:paddingLeft="@dimen/activity_horizontal_margin"
+    android:paddingRight="@dimen/activity_horizontal_margin"
+    android:paddingTop="@dimen/activity_vertical_margin"
+    android:paddingBottom="@dimen/activity_vertical_margin"
+    tools:context="com.mellocastanho.easytraining.NewTrainingActivity"
+    android:focusable="false">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="@string/new_training"
+        android:id="@+id/newTrainingTextView"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:textStyle="bold"
+        android:textSize="25sp" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/titleEditText"
+        android:layout_marginTop="20dp"
+        android:autoText="false"
+        android:enabled="true"
+        android:inputType="textCapWords"
+        android:editable="true"
+        android:nestedScrollingEnabled="true"
+        android:textSize="20sp"
+        android:layout_below="@+id/newTrainingTextView"
+        android:layout_toRightOf="@+id/titleTextView"
+        android:layout_toEndOf="@+id/titleTextView"
+        android:elegantTextHeight="false"
+        android:selectAllOnFocus="true"
+        android:hint="@string/ex_gym_a" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/title"
+        android:id="@+id/titleTextView"
+        android:textSize="20sp"
+        android:layout_alignBaseline="@+id/titleEditText"
+        android:layout_alignBottom="@+id/titleEditText"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:textColor="#000000" />
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_new_exercise"
+        android:id="@+id/newExerciseButton"
+        android:layout_below="@+id/titleEditText"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:onClick="startNewExerciseActivity"/>
+
+
+    <ImageButton
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/cancelImageButton"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:src="@drawable/wrong_mark"
+        android:scaleType="fitCenter"
+        android:cropToPadding="false"
+        android:background="#00ffffff" />
+
+    <ImageButton
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:id="@+id/checkImageButton"
+        android:src="@drawable/check_mark"
+        android:scaleType="fitCenter"
+        android:layout_alignTop="@+id/cancelImageButton"
+        android:layout_alignParentEnd="true"
+        android:background="#00ffffff" />
+
+</RelativeLayout>
