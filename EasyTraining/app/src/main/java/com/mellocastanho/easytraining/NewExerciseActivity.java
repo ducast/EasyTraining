@@ -125,42 +125,58 @@ Set check button
                 SharedPreferences myPrefs = context.getSharedPreferences(getString(R.string.EASY_TRAINING_PREFS), Context.MODE_PRIVATE);
                 final SharedPreferences.Editor prefsEditor = myPrefs.edit();
 
+                // Save title to Prefs
                 final EditText titleEditText = (EditText)findViewById(R.id.titleEditText);
                 String myExerciseTitle = String.valueOf(titleEditText.getText());
-                final TextView titleTextView2 = (TextView) findViewById(R.id.testTextView2);
                 prefsEditor.putString(MY_EXERCISE_TITLE_KEY, myExerciseTitle);
+
+                // Save number of sequences to Prefs
+                final SeekBar nOfSequencesSeekbar = (SeekBar)findViewById(R.id.nOfSequencesSeekBar);
+                String myExerciseNSeq = String.valueOf(nOfSequencesSeekbar.getProgress());
+                prefsEditor.putString(MY_EXERCISE_N_SEQ_KEY, myExerciseNSeq);
+
+                // Save number of repetitions to Prefs
+                final SeekBar nOfRepetitionsSeekBar = (SeekBar)findViewById(R.id.nOfRepetitionsSeekBar);
+                String myExerciseNRep = String.valueOf(nOfRepetitionsSeekBar.getProgress());
+                prefsEditor.putString(MY_EXERCISE_N_REP_KEY, myExerciseNRep);
+
+                // Save break length converted to seconds to Prefs
+                final Spinner breakLengthMinutesSpinner = (Spinner)findViewById(R.id.breakLengthMinutesSpinner);
+                String myExerciseBreakLengthMinutes = breakLengthMinutesSpinner.getSelectedItem().toString();
+
+                final Spinner breakLengthSecondsSpinner = (Spinner)findViewById(R.id.breakLengthSecondsSpinner);
+                String myExerciseBreakLengthSeconds = breakLengthSecondsSpinner.getSelectedItem().toString();
+
+                String myExerciseBreakLength = String.valueOf(Integer.parseInt(myExerciseBreakLengthMinutes)*60 + Integer.parseInt(myExerciseBreakLengthSeconds));
+
+                prefsEditor.putString(MY_EXERCISE_BREAK_LENGTH_KEY, myExerciseBreakLength);
+
+                // Save number of repetitions to Prefs
+                final SeekBar speedSeekBar = (SeekBar)findViewById(R.id.speedSeekBar);
+                String myExerciseSpeedSeekBar = String.valueOf(speedSeekBar.getProgress());
+                prefsEditor.putString(MY_EXERCISE_SPEED_KEY, myExerciseSpeedSeekBar);
+
+
+
                 prefsEditor.apply();
 
-//                titleTextView2.setText(myExerciseTitle);
-                String titleString = myPrefs.getString(MY_EXERCISE_TITLE_KEY,"Nada a declarar");
-                titleTextView2.setText(titleString);
+                //Test Prefs
+                String keyToTest = MY_EXERCISE_SPEED_KEY;
+                final TextView testPrefs = (TextView) findViewById(R.id.testPrefsText);
+                String titleString = myPrefs.getString(keyToTest,"Nada a declarar");
+                testPrefs.setText(titleString);
 
             }
         });
 
 
 /*
-        final EditText titleEditText = (EditText)findViewById(R.id.titleEditText);
-        String myExerciseTitle = String.valueOf(titleEditText.getText());
-        prefsEditor.putString(MY_EXERCISE_TITLE_KEY, myExerciseTitle);
 
         final EditText titleEditText = (EditText)findViewById(R.id.titleEditText);
         String myExerciseTitle = String.valueOf(titleEditText.getText());
         prefsEditor.putString(MY_EXERCISE_TITLE_KEY, myExerciseTitle);
-
-        final EditText titleEditText = (EditText)findViewById(R.id.titleEditText);
-        String myExerciseTitle = String.valueOf(titleEditText.getText());
-        prefsEditor.putString(MY_EXERCISE_TITLE_KEY, myExerciseTitle);
-
-        final EditText titleEditText = (EditText)findViewById(R.id.titleEditText);
-        String myExerciseTitle = String.valueOf(titleEditText.getText());
-        prefsEditor.putString(MY_EXERCISE_TITLE_KEY, myExerciseTitle);
-
-        final EditText titleEditText = (EditText)findViewById(R.id.titleEditText);
-        String myExerciseTitle = String.valueOf(titleEditText.getText());
-        prefsEditor.putString(MY_EXERCISE_TITLE_KEY, myExerciseTitle);
-
 */
+
 
 
 
