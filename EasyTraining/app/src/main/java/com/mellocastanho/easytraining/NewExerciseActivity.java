@@ -6,6 +6,7 @@ import android.content.SharedPreferences;
 import android.graphics.Color;
 import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
+import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.widget.EditText;
 import android.widget.ImageButton;
@@ -14,7 +15,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 
 
-public class NewExerciseActivity extends ActionBarActivity {
+public class NewExerciseActivity extends AppCompatActivity {
 
     final String MY_EXERCISE_TITLE_KEY = "My Exercise Title";
     final String MY_EXERCISE_TYPE_KEY = "My Exercise Type";
