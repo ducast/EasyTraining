@@ -20,18 +20,16 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/titleEditText"
-        android:autoText="false"
+        android:id="@+id/nameEditText"
         android:enabled="true"
         android:inputType="textCapWords"
-        android:editable="true"
         android:nestedScrollingEnabled="true"
         android:textSize="20sp"
         android:elegantTextHeight="true"
         android:selectAllOnFocus="false"
         android:layout_below="@+id/newExerciseTextView"
-        android:layout_toRightOf="@+id/titleTextView"
-        android:layout_toEndOf="@+id/titleTextView"
+        android:layout_toRightOf="@+id/nameTextView"
+        android:layout_toEndOf="@+id/nameTextView"
         android:singleLine="true"
         android:hint="@string/ex_Supino"
         android:layout_marginTop="20dp"
@@ -41,21 +39,21 @@
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/title"
-        android:id="@+id/titleTextView"
+        android:text="@string/name"
+        android:id="@+id/nameTextView"
         android:textSize="20sp"
         android:textColor="#000000"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
-        android:layout_alignBottom="@+id/titleEditText"
-        android:layout_alignBaseline="@+id/titleEditText" />
+        android:layout_alignBottom="@+id/nameEditText"
+        android:layout_alignBaseline="@+id/nameEditText" />
 
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/typeSpinner"
         android:entries="@array/typesArray"
-        android:layout_alignStart="@+id/titleEditText"
+        android:layout_alignStart="@+id/nameEditText"
         android:focusable="false"
         android:textSize="20sp"
         android:layout_toRightOf="@+id/typeTextView"
@@ -68,7 +66,7 @@
         android:id="@+id/typeTextView"
         android:textSize="20sp"
         android:textColor="#000000"
-        android:layout_below="@+id/titleTextView"
+        android:layout_below="@+id/nameTextView"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true" />
 
@@ -91,7 +89,7 @@
         android:max="10"
         android:progress="3"
         android:indeterminate="false"
-        android:layout_toEndOf="@+id/titleEditText"
+        android:layout_toEndOf="@+id/nameEditText"
         android:layout_toRightOf="@+id/nOfSequences"
         android:layout_alignTop="@+id/nOfSequencesTextView" />
 
@@ -232,7 +230,7 @@
         android:layout_height="wrap_content"
         android:id="@+id/speedSeekBar"
         android:max="30"
-        android:progress="12"
+        android:progress="15"
         android:indeterminate="false"
         android:layout_alignTop="@+id/speedShowTextView"
         android:layout_toRightOf="@+id/speedShowTextView"
@@ -248,7 +246,8 @@
         android:src="@drawable/wrong_mark"
         android:scaleType="fitCenter"
         android:cropToPadding="false"
-        android:background="#00ffffff" />
+        android:background="#00ffffff"
+        android:onClick="cancelButtonDoIt"/>
 
     <ImageButton
         android:layout_width="60dp"
@@ -259,17 +258,16 @@
         android:layout_alignTop="@+id/cancelImageButton"
         android:layout_alignParentEnd="true"
         android:background="#00ffffff"
-        android:onClick="startNewTrainingActivity" />
+        android:onClick="checkButtonDoIt"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/testPrefsText"
-        android:layout_below="@+id/breakLengthMinutesSpinner"
-        android:layout_alignParentLeft="true"
-        android:layout_alignParentStart="true"
-        android:layout_marginTop="59dp"
-        android:textSize="40dp" />
+        android:text="New Text"
+        android:id="@+id/textView"
+        android:layout_below="@+id/breakLengthSecondsSpinner"
+        android:layout_toLeftOf="@+id/newExerciseTextView"
+        android:layout_toStartOf="@+id/newExerciseTextView" />
 
 
 </RelativeLayout>
