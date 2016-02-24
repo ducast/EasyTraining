@@ -20,10 +20,18 @@
     <string name="slow">Slow</string>
     <string name="average">Average</string>
     <string name="fast">Fast</string>
-    <string name="none">None</string>
+    <string name="none">None\n</string>
     <string name="next_exercise">Next Exercise:</string>
     <string name="current_exercise">Current Exercise:</string>
     <string name="finished">Finished</string>
+    <string name="done">Done</string>
+    <string name="go">GO!</string>
+    <string name="set">SET</string>
+    <string name="ready">READY</string>
+    <string name="tap_to_pause">(Tap to pause)</string>
+    <string name="tap_to_resume">(Tap to resume)</string>
+    <string name="empty" />
+    <string name="no_exercises">There are no exercises here :(</string>
     <string-array name="typesArray">
         <item>Bodybuilding</item>
         <!--

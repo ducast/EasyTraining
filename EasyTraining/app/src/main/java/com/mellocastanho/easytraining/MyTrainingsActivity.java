@@ -20,7 +20,9 @@ public class MyTrainingsActivity extends AppCompatActivity {
     final int ADD_TRAINING_REQUEST_CODE = 1;
     int MARGIN_TOP_DP = 10;
     int MARGIN_TOP_UNIT = 50;
-    int CURR_BUTTON_ID;
+    int CURR_START_BUTTON_ID;
+    int CURR_DELETE_BUTTON_ID;
+    int CURR_TRAINING_BUTTON_ID;
 
 
     @Override
@@ -36,7 +38,7 @@ public class MyTrainingsActivity extends AppCompatActivity {
         for (Training tempTraining : trainings) {
             int trainingID = tempTraining.getID();
             addNewStartButton(trainingID);
-            addNewExerciseButton(tempTraining.getName());
+            addNewDeleteButton(trainingID);
         }
 
     }
@@ -50,7 +52,7 @@ public class MyTrainingsActivity extends AppCompatActivity {
 
                 String trainingName = training.getName();
                 addNewStartButton(trainingID);
-                addNewExerciseButton(trainingName);
+                addNewDeleteButton(trainingID);
             }
         }
     }
@@ -90,31 +92,87 @@ public class MyTrainingsActivity extends AppCompatActivity {
         });
 
         //Generate ID
-        CURR_BUTTON_ID = generateViewId();
-        newImageButton.setId(CURR_BUTTON_ID);
-
-        //Update Margin
-        MARGIN_TOP_DP += MARGIN_TOP_UNIT;
+        CURR_START_BUTTON_ID = generateViewId();
+        newImageButton.setId(CURR_START_BUTTON_ID);
 
         return newImageButton;
     }
 
-    public Button addNewExerciseButton(String trainingName){
+    public ImageButton addNewDeleteButton(final int trainingID) {
+
+        RelativeLayout myTrainingsLayout = (RelativeLayout) findViewById(R.id.myTrainingsLayout);
+        ImageButton newImageButton = new ImageButton(this);
+
+        //Set Button Parameters
+        newImageButton.setImageResource(R.drawable.wrong_mark);
+        newImageButton.setBackgroundColor(Color.TRANSPARENT);
+        newImageButton.setScaleType(ImageView.ScaleType.FIT_XY);
+
+        myTrainingsLayout.addView(newImageButton);
+
+        RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams) newImageButton.getLayoutParams();
+        params.width = dpToPixels(50);
+        params.height = dpToPixels(50);
+
+        params.addRule(RelativeLayout.BELOW, R.id.myTrainingsTextView);
+        params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
+
+        int marginTop = dpToPixels(MARGIN_TOP_DP);
+        params.setMargins(0, marginTop, 0, 0);
+
+        //Update Margin
+        MARGIN_TOP_DP += MARGIN_TOP_UNIT;
+
+        newImageButton.setLayoutParams(params);
+
+        //Generate ID
+        CURR_DELETE_BUTTON_ID = generateViewId();
+        newImageButton.setId(CURR_DELETE_BUTTON_ID);
+
+        addNewTrainingButton(trainingID);
+
+        //Set OnClick
+        final int startButtonID = CURR_START_BUTTON_ID;
+        final int deleteButtonID = CURR_DELETE_BUTTON_ID;
+        final int trainingButtonID = CURR_TRAINING_BUTTON_ID;
+
+        newImageButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                deleteTraining(v, trainingID);
+                deleteButtons(startButtonID, deleteButtonID, trainingButtonID);
+            }
+        });
+
+        return newImageButton;
+    }
+
+    public Button addNewTrainingButton(int trainingID) {
+
+        EasyTrainingDBHandler dbHandler = new EasyTrainingDBHandler(this, null, null, 1);
+
+        String trainingName = dbHandler.getTrainingByID(trainingID).getName();
+
+        dbHandler.close();
+
         RelativeLayout myTrainingsLayout = (RelativeLayout)findViewById(R.id.myTrainingsLayout);
         Button newButton = new Button (this);
 
         newButton.setText(trainingName);
 
-
         myTrainingsLayout.addView(newButton);
 
         RelativeLayout.LayoutParams params = (RelativeLayout.LayoutParams)newButton.getLayoutParams();
 
-        params.addRule(RelativeLayout.ALIGN_PARENT_LEFT);
-        params.addRule(RelativeLayout.LEFT_OF, CURR_BUTTON_ID);
-        params.addRule(RelativeLayout.ALIGN_BOTTOM, CURR_BUTTON_ID);
+        params.addRule(RelativeLayout.RIGHT_OF, CURR_DELETE_BUTTON_ID);
+        params.addRule(RelativeLayout.LEFT_OF, CURR_START_BUTTON_ID);
+        params.addRule(RelativeLayout.ALIGN_BOTTOM, CURR_START_BUTTON_ID);
 
         newButton.setLayoutParams(params);
+
+        CURR_TRAINING_BUTTON_ID = generateViewId();
+        newButton.setId(CURR_TRAINING_BUTTON_ID);
 
         return newButton;
     }
@@ -149,17 +207,26 @@ public class MyTrainingsActivity extends AppCompatActivity {
 
     }
 
+    public void deleteTraining(View v, int trainingID) {
+
+        EasyTrainingDBHandler dbHandler = new EasyTrainingDBHandler(this, null, null, 1);
+        dbHandler.deleteTraining(trainingID);
+        dbHandler.close();
+    }
+
+    public void deleteButtons(int startButtonID, int deleteButtonID, int trainingButtonID) {
+
+        RelativeLayout myTrainingsLayout = (RelativeLayout)findViewById(R.id.myTrainingsLayout);
+
+        View startButtonView = findViewById(startButtonID);
+        View deleteButtonView = findViewById(deleteButtonID);
+        View trainingButtonView = findViewById(trainingButtonID);
 
 
-
-
-
-
-
-
-
-
-
+        myTrainingsLayout.removeView(startButtonView);
+        myTrainingsLayout.removeView(deleteButtonView);
+        myTrainingsLayout.removeView(trainingButtonView);
+    }
 
 
 
@@ -177,7 +244,5 @@ public class MyTrainingsActivity extends AppCompatActivity {
             }
         }
     }
-
-
 }
 

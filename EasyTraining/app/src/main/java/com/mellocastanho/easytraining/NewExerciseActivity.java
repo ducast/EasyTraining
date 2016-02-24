@@ -168,7 +168,6 @@ public class NewExerciseActivity extends AppCompatActivity {
         int speed = speedSeekBar.getProgress();
 
         //Save to DB
-        deleteExercise(name);
         Exercise exercise = new Exercise(training_id, name, type, nSeq, nRep, breakLength, speed);
         EasyTrainingDBHandler dbHandler = new EasyTrainingDBHandler(this, null, null, 1);
         dbHandler.addExercise(exercise);
@@ -178,16 +177,16 @@ public class NewExerciseActivity extends AppCompatActivity {
         return exercise;
     }
 
-    //Delete Exercise from Database
-    public boolean deleteExercise(String exercise) {
-
-        boolean result = false;
-
-        EasyTrainingDBHandler dbHandler = new EasyTrainingDBHandler(this, null, null, 1);
-        result = dbHandler.deleteExercise(exercise);
-        dbHandler.close();
-
-        return result;
-    }
+//    //Delete Exercise from Database
+//    public boolean deleteExercise(int exerciseID) {
+//
+//        boolean result = false;
+//
+//        EasyTrainingDBHandler dbHandler = new EasyTrainingDBHandler(this, null, null, 1);
+//        result = dbHandler.deleteExercise(exerciseID);
+//        dbHandler.close();
+//
+//        return result;
+//    }
 
 }

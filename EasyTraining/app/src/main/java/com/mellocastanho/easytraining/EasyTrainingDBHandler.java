@@ -158,6 +158,51 @@ public class EasyTrainingDBHandler extends SQLiteOpenHelper {
 
     }
 
+    public void deleteTraining(int trainingID) {
+
+
+        String query = "Select * FROM " + TABLE_TRAININGS +
+                " WHERE " + COLUMN_ID + " =  \"" + String.valueOf(trainingID) + "\"";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        Training training = new Training();
+
+        if (cursor.moveToFirst()) {
+            training.setID(Integer.parseInt(cursor.getString(0)));
+            db.delete(TABLE_TRAININGS, COLUMN_ID + " = ?",
+                    new String[]{String.valueOf(training.getID())});
+            cursor.close();
+        }
+
+        db.close();
+
+        deleteTrainingExercises(trainingID);
+    }
+
+    public void deleteTrainingExercises(int trainingID) {
+
+        String query = "Select * FROM " + TABLE_EXERCISES +
+                " WHERE " + COLUMN_TRAINING_ID + " =  \"" + String.valueOf(trainingID) + "\"";
+
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        Cursor cursor = db.rawQuery(query, null);
+
+        Exercise exercise = new Exercise();
+
+        if (cursor.moveToFirst()) {
+            exercise.setID(Integer.parseInt(cursor.getString(0)));
+            db.delete(TABLE_EXERCISES, COLUMN_ID + " = ?",
+                    new String[] { String.valueOf(exercise.getID()) });
+            cursor.close();
+        }
+        db.close();
+
+    }
+
     public int addExercise(Exercise exercise) {
         ContentValues values = new ContentValues();
         values.put(COLUMN_TRAINING_ID, exercise.getTrainingID());
@@ -266,11 +311,12 @@ public class EasyTrainingDBHandler extends SQLiteOpenHelper {
 
     }
 
-    public boolean deleteExercise(String exerciseID) {
+    public boolean deleteExercise(int exerciseID) {
 
         boolean result = false;
 
-        String query = "Select * FROM " + TABLE_EXERCISES + " WHERE " + COLUMN_ID + " =  \"" + exerciseID + "\"";
+        String query = "Select * FROM " + TABLE_EXERCISES +
+                " WHERE " + COLUMN_ID + " =  \"" + String.valueOf(exerciseID) + "\"";
 
         SQLiteDatabase db = this.getWritableDatabase();
 

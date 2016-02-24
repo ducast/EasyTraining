@@ -2,10 +2,14 @@ package com.mellocastanho.easytraining;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.media.AudioManager;
+import android.media.ToneGenerator;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+import org.w3c.dom.Text;
 
 import java.util.List;
 import java.util.Timer;
@@ -13,13 +17,14 @@ import java.util.TimerTask;
 
 public class PlayingActivity extends Activity {
 
-    final int STARTING = -1;
-    final int PAUSED = 0;
+    final int WAITING = -1;
+    final int STARTING = 0;
     final int PLAYING = 1;
-    final int BREAK = 2;
-    final int WAITING = 3;
+    final int PAUSED = 2;
+    final int BREAK = 3;
+    final int FINISHED = 4;
 
-    int status = STARTING;
+    int status = WAITING;
     int pausedStatus;
 
     Exercise currExercise;
@@ -56,8 +61,6 @@ public class PlayingActivity extends Activity {
 
         refreshExercises();
 
-//        nameTextView.setText(String.valueOf(currExercise.getBreak_length()));
-
     }
 
     public void refreshExercises () {
@@ -65,17 +68,30 @@ public class PlayingActivity extends Activity {
         TextView currExerciseTextView2 = (TextView) findViewById(R.id.currExerciseTextView2);
         TextView nextExerciseTextView2 = (TextView) findViewById(R.id.nextExerciseTextView2);
 
+        String show;
+        String showNext;
 
         if (ExercisesList.size() > currListOrder) {
 
             currExercise = ExercisesList.get(currListOrder);
-            currExerciseTextView2.setText(currExercise.getName());
+
+            show = currExercise.getName() + "\n" +
+                    String.valueOf(currExercise.getN_sequences()) + " x " +
+                    String.valueOf(currExercise.getN_repetitions());
+
+            currExerciseTextView2.setText(show);
         }
 
         if (ExercisesList.size() > currListOrder+1) {
 
             nextExercise = ExercisesList.get(nextListOrder);
-            nextExerciseTextView2.setText(nextExercise.getName());
+
+            showNext = nextExercise.getName();
+//                    + "\n" +
+//                    String.valueOf(nextExercise.getN_sequences()) + " x " +
+//                    String.valueOf(nextExercise.getN_repetitions());
+
+            nextExerciseTextView2.setText(showNext);
         } else {
 
             nextExerciseTextView2.setText(R.string.none);
@@ -88,7 +104,7 @@ public class PlayingActivity extends Activity {
     public void startButtonDoIt(View v){
 
         switch (status){
-            case STARTING: startExercise();
+            case WAITING: startExercise();
                 break;
             case PAUSED: resumeExercise();
                 break;
@@ -96,15 +112,43 @@ public class PlayingActivity extends Activity {
                 break;
             case BREAK: pauseExercise();
                 break;
-            case WAITING: startExercise();
+            case STARTING:
                 break;
+            case FINISHED:
+                break;
+        }
+    }
+
+    public void backButtonDoIt(View v) {
+
+        if (timer != null) if (timer != null) timer.cancel();
+        finish();
+    }
+
+    public void forwardButtonDoIt(View v) {
+
+        if (status == PLAYING || status == BREAK) {
+            
+            if (timer != null) timer.cancel();
+            endOfTimer();
         }
     }
 
     public void startExercise() {
 
+        //HOLD 3 SECS
+        status = STARTING;
+        imageToRedCircle();
+        setTimer(3000, 1000);
+    }
+
+    //NESTED IN startExercise
+    public void startSequence() {
+
         imageToGreenCircle();
         status = PLAYING;
+
+        setTapToText(R.string.tap_to_pause);
 
         currSequence -= 1;
 
@@ -120,12 +164,16 @@ public class PlayingActivity extends Activity {
         pausedStatus = status;
         status = PAUSED;
 
-        timer.cancel();
+        setTapToText(R.string.tap_to_resume);
+
+        if (timer != null) timer.cancel();
         countDown += currCountDownInterval;
         imageToYellowCircle();
     }
 
     public void resumeExercise() {
+
+        setTapToText(R.string.tap_to_pause);
 
         if (pausedStatus == PLAYING) {
             imageToGreenCircle();
@@ -143,6 +191,8 @@ public class PlayingActivity extends Activity {
 
         imageToRedCircle();
         status = BREAK;
+
+        setTapToText(R.string.tap_to_pause);
 
         int breakLength = currExercise.getBreak_length() * 1000; //ms
 
@@ -162,6 +212,33 @@ public class PlayingActivity extends Activity {
         }
     }
 
+    public void displayCountDown(int countDown, int countDownInterval) {
+
+        TextView timeLeft = (TextView) findViewById(R.id.timeLeftTextView);
+
+        if (status == STARTING) {
+
+            switch (countDown/1000) {
+
+                case 0: timeLeft.setText(R.string.go);
+                    break;
+                case 1: timeLeft.setText(R.string.set);
+                    break;
+                case 2: timeLeft.setText(R.string.ready);
+                    break;
+            }
+        } else {
+
+            timeLeft.setText(String.valueOf(countDown / countDownInterval + 1));
+        }
+    }
+
+
+    public void setTapToText (int stringID) {
+
+        TextView tapToTextView = (TextView) findViewById(R.id.tapToTextView);
+        tapToTextView.setText(stringID);
+    }
 
     public void imageToGreenCircle(){
 
@@ -188,7 +265,6 @@ public class PlayingActivity extends Activity {
 
     }
 
-
     public void setTimer(final int start, final int countDownInterval) {
 
         timer = new Timer("Timer");
@@ -203,26 +279,23 @@ public class PlayingActivity extends Activity {
                 if (countDown > 0) {
 
                     countDown -= countDownInterval;
-//                    INSERT BEEP SOUND;
 
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
 
-                            TextView timeLeft = (TextView) findViewById(R.id.timeLeftTextView);
-                            timeLeft.setText(String.valueOf(countDown/countDownInterval + 1));
+                            beep(countDown);
+
+                            displayCountDown(countDown, countDownInterval);
                         }
                     });
-
-
-
                 } else {
 
                     runOnUiThread(new Runnable() {
                         @Override
                         public void run() {
 
-                            timer.cancel();
+                            if (timer != null) timer.cancel();
                             endOfTimer();
                         }
                     });
@@ -233,33 +306,63 @@ public class PlayingActivity extends Activity {
         timer.schedule(timerTask, 0, countDownInterval);
     }
 
+    public void beep(int countDown) {
+
+        if (!(status == BREAK && countDown > 2000)) {
+
+            ToneGenerator tg = new ToneGenerator(AudioManager.STREAM_NOTIFICATION, 100);
+
+            if (status == BREAK || status == STARTING) {
+
+                tg.startTone(ToneGenerator.TONE_CDMA_ALERT_CALL_GUARD);
+            } else {
+
+                tg.startTone(ToneGenerator.TONE_CDMA_ABBR_ALERT);
+            }
+
+            tg.release();
+            tg = null;
+        }
+    }
+
     public void endOfExercise() {
 
         currListOrder += 1;
+
         refreshExercises();
+
         imageToStart();
+        setTapToText(R.string.empty);
+
         TextView timeLeft = (TextView) findViewById(R.id.timeLeftTextView);
-        timeLeft.setText("");
+        timeLeft.setText(R.string.empty);
+
         status = WAITING;
     }
 
     public void endOfTraining() {
 
-        imageToStart();
+        imageToRedCircle();
+        setTapToText(R.string.empty);
+
         TextView timeLeft = (TextView) findViewById(R.id.timeLeftTextView);
-        timeLeft.setText(R.string.finished);
+        timeLeft.setText(R.string.done);
+
+        TextView currExerciseTextView2 = (TextView) findViewById(R.id.currExerciseTextView2);
+        currExerciseTextView2.setText(R.string.none);
+
+        status = FINISHED;
     }
 
     public void endOfTimer() {
 
-        if (status == PLAYING) {
-
-            startBreak();
-
-        } else if (status == BREAK) {
-
-            startExercise();
+        switch (status) {
+            case PLAYING: startBreak();
+                break;
+            case BREAK: startSequence();
+                break;
+            case STARTING: startSequence();
+                break;
         }
     }
-
 }
